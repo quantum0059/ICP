@@ -1,30 +1,13 @@
 class Solution {
     public int minOperations(int[] nums) {
         int steps = 0;
-        int firstZeroIdx = -1;
-        for(int i=0;i<nums.length;i++){
+        for(int i=0;i<=nums.length-3;i++){
             if(nums[i] == 0){
-                firstZeroIdx = i;
-                break;
-            }
-        }
-
-        if(firstZeroIdx == -1)return 0;
-
-       
-
-        for(int i = firstZeroIdx; i<=nums.length-3;i++){
-              if(nums[i] == 0){
-                for(int j=i;j<i+3;j++){
-                    if(nums[j] == 0){
-                        nums[j] = 1;
-                        
-                    }else{
-                        nums[j] = 0;
-                    }
-                }
+                nums[i]^=1;
+                nums[i+1]^=1;
+                nums[i+2]^=1;
                 steps++;
-               }       
+            }
         }
 
         for(int num: nums){
@@ -33,7 +16,9 @@ class Solution {
             }
         }
 
+       
         return steps;
+        
 
 
     }
