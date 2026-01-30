@@ -62,11 +62,13 @@ class Solution {
 
             
             if (primeIdx.size() >= 2) {
-                int secondLastPrimeIdx =
-                        primeIdx.toArray(new Integer[0])[primeIdx.size() - 2];
+               int second = primeIdx.peekLast();
+               primeIdx.pollLast();
+               int first = primeIdx.peekLast();
+               primeIdx.addLast(second);
 
                 
-                count += (secondLastPrimeIdx - left + 1);
+                count += (first - left + 1);
             }
         }
 
