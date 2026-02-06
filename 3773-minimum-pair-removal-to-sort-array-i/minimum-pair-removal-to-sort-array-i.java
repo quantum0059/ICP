@@ -28,27 +28,28 @@ class Solution {
        }
        int steps = 0;
        while (true) {
-        Node prev = newList;
-        Node curr = newList.next;
-        Node bestPrev = null;
-        int minSum = Integer.MAX_VALUE;
+            Node prev = newList;
+            Node curr = newList.next;
+            Node bestPrev = null;
+            int minSum = Integer.MAX_VALUE;
 
-        while (curr != null && curr.next != null) {
-            int s = curr.value + curr.next.value;
-            if (s < minSum) {
-                minSum = s;
-                bestPrev = prev;
+            while(curr!= null && curr.next!= null){
+                int sum = curr.value + curr.next.value;
+                if(sum< minSum){
+                    minSum = sum;
+                    bestPrev = prev;
+                }
+                prev = curr;
+                curr = curr.next;
             }
-            prev = curr;
-            curr = curr.next;
-        }
 
-        Node after = bestPrev.next.next.next;
-        bestPrev.next = new Node(minSum);
-        bestPrev.next.next = after;
+            Node next = bestPrev.next.next.next;
+            bestPrev.next = new Node(minSum);
+            bestPrev.next.next = next;
 
-        steps++;
-        if (isSorted(newList)) break;
+            steps++;
+            if(isSorted(newList)) break;
+
   }
 
 
