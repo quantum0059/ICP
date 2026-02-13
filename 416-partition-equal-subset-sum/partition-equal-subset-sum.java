@@ -1,35 +1,39 @@
 class Solution {
+    Boolean[][] memo;
+
     public boolean canPartition(int[] nums) {
-        int n = nums.length;
-        if(n==1){
+        int totalSum = 0;
+        for (int num : nums) {
+            totalSum += num;
+        }
+
+        if (totalSum % 2 != 0) {
             return false;
         }
 
-        int totalSum = 0;
-        for(int i: nums){
-            totalSum+=i;
-        }
-        Boolean dp[][] = new Boolean[n][totalSum];
+        int target = totalSum / 2;
+        memo = new Boolean[nums.length][target + 1];
 
-        return isPossible(nums, totalSum, 0, 0, dp);
+        return canFindSubsetSum(nums, 0, target);
     }
 
-    static boolean isPossible(int[] nums, int totalSum, int idx, int sum, Boolean[][] dp){
-        if(idx == nums.length){
-            return false;
-        }
-
-        if(sum == (totalSum-sum)){
+    private boolean canFindSubsetSum(int[] nums, int idx, int remainingTarget) {
+        // Base cases
+        if (remainingTarget == 0) { 
             return true;
         }
-
-        if(sum>(totalSum-sum)){
+        if (idx == nums.length || remainingTarget < 0) {
             return false;
         }
-        if(dp[idx][sum] != null){
-            return dp[idx][sum];
+
+        if (memo[idx][remainingTarget] != null) {
+            return memo[idx][remainingTarget];
         }
 
-        return dp[idx][sum] = isPossible(nums, totalSum, idx+1, sum+nums[idx], dp)|| isPossible(nums, totalSum, idx+1, sum, dp); 
+        boolean include = canFindSubsetSum(nums, idx + 1, remainingTarget - nums[idx]);
+
+        boolean exclude = canFindSubsetSum(nums, idx + 1, remainingTarget);
+
+        return memo[idx][remainingTarget] = include || exclude;
     }
 }
