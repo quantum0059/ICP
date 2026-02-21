@@ -11,23 +11,18 @@ class Solution {
         //p-n = target;
         //p+n = totalSum;
         int p = (totalSum+target)/2;
-        int[][] dp = new int[n][p+1];
 
-        for(int[] arr: dp){
-            Arrays.fill(arr, -1);
-        }
 
-        return helper(nums, dp, 0, p);
+        return helper(nums,0, p);
     }
-    static int helper(int[] nums, int[][] dp, int idx , int rem){
+    static int helper(int[] nums,  int idx , int rem){
         if(idx == nums.length) return rem==0?1:0;
-        if(dp[idx][rem] != -1) return dp[idx][rem];
 
-        int stillValid = helper(nums, dp, idx+1, rem);
+        int stillValid = helper(nums, idx+1, rem);
         if(nums[idx]<=rem){
-            stillValid += helper(nums, dp, idx+1, rem-nums[idx]);
+            stillValid += helper(nums, idx+1, rem-nums[idx]);
         }
 
-        return dp[idx][rem] = stillValid;
+        return  stillValid;
     } 
 }
