@@ -3,28 +3,21 @@ class Solution {
         String s1 = s;
         String s2 = new StringBuilder(s).reverse().toString();
 
-        int[][] dp = new int[s1.length()][s2.length()];
-        for(int[] arr: dp){
-            Arrays.fill(arr, -1);
+        int[][] dp = new int[s1.length()+1][s2.length()+1];
+
+        for(int i=1;i<=s1.length();i++){
+            for(int j=1;j<=s2.length();j++){
+                if(s1.charAt(i-1) == s2.charAt(j-1)){
+                    dp[i][j] = 1+dp[i-1][j-1];
+                }else{
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
         }
 
-        return helper(s1, s2, 0, 0, dp);
-    }
-
-    static int helper(String s1, String s2, int i, int j, int[][] dp){
-        if(i==s1.length() || j==s2.length()) return 0;
-
-         if(dp[i][j] != -1){
-            return dp[i][j];
-         }
+        return dp[s1.length()][s2.length()];
         
-        if(s1.charAt(i) == s2.charAt(j)){
-           return dp[i][j] = 1+helper(s1, s2, i+1, j+1, dp);
-        }
-
-        int skip1 = helper(s1, s2, i+1, j, dp);
-        int skip2 = helper(s1, s2, i, j+1, dp);
-
-        return dp[i][j] = Math.max(skip1, skip2);
     }
+
+    
 }
