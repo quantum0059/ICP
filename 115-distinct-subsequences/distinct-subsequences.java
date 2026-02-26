@@ -1,50 +1,25 @@
 class Solution {
-    static int[][] dp;
-
     public int numDistinct(String s, String t) {
-        dp = new int[s.length() + 1][t.length() + 1];
-        for (int i = 0; i <= s.length(); i++) {
-            Arrays.fill(dp[i], -1);
+        int n = s.length();
+        int m = t.length();
+
+        int[][] dp = new int[n][m];
+        for(int[] arr: dp){
+            Arrays.fill(arr, -1);
         }
 
-        StringBuilder sb = new StringBuilder();
-        return helper(s, t, 0, sb);
+        return helper(s, t, n-1, m-1, dp);
     }
 
-    static int helper(String s, String t, int idx, StringBuilder sb) {
-
-        if (sb.length() > 0) {
-            int last = sb.length() - 1;
-            if (sb.charAt(last) != t.charAt(last)) {
-                return 0;
-            }
-        }
-
+    static int helper(String s, String t, int i, int j, int[][] dp){
+        if(j<0) return 1;
+        if(i<0) return 0;
         
-        if (dp[idx][sb.length()] != -1) {
-            return dp[idx][sb.length()];
-        }
+        if(dp[i][j]!= -1) return dp[i][j];
+        if(s.charAt(i) == t.charAt(j)){
+            return dp[i][j] = (helper(s, t, i-1, j-1, dp)+helper(s, t, i-1, j, dp));
+        } 
 
-        
-        if (idx == s.length()) {
-            return dp[idx][sb.length()] =
-                    (sb.length() == t.length()) ? 1 : 0;
-        }
-
-        if (sb.length() == t.length()) {
-            return dp[idx][sb.length()] = 1;
-        }
-
-        int count = 0;
-
-       
-        sb.append(s.charAt(idx));
-        count += helper(s, t, idx + 1, sb);
-        sb.deleteCharAt(sb.length() - 1);
-
-        
-        count += helper(s, t, idx + 1, sb);
-
-        return dp[idx][sb.length()] = count;
+        return dp[i][j] = helper(s, t, i-1, j, dp);
     }
 }
