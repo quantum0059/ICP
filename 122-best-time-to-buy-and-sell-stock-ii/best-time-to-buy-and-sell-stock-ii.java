@@ -2,34 +2,32 @@ class Solution {
     public int maxProfit(int[] prices) {
         int n =prices.length;
 
-        int[][] dp = new int[n][2];
-        for(int[] arr: dp){
-            Arrays.fill(arr, -1);
+        int[][] dp = new int[n+1][2];
+
+        for(int i=0;i<2;i++){
+            dp[n][0] = 0;
         }
 
-        return helper(prices, 0, 1, dp);
-    }
 
-    static int helper(int[] prices, int idx, int buy, int[][] dp){
-        if(idx == prices.length) return 0;
+        for(int idx=n-1;idx>=0;idx--){
+            for(int buy =0 ;buy<=1;buy++){
+                int profit = 0;
+                if(buy == 1){
+                    int take = -prices[idx] + dp[idx+1][0];
+                    int skip = dp[idx+1][1];
 
-        if(dp[idx][buy] != -1) return dp[idx][buy];
-        
-        int profit =0;
-        if(buy == 1){
+                    profit = Math.max(take, skip);
+                }else{
+                    int take = prices[idx] + dp[idx+1][1];
+                    int skip = dp[idx+1][0];
 
-          int take = -prices[idx] + helper(prices, idx+1, 0, dp);
-          int skip = helper(prices, idx+1, 1, dp);
+                    profit = Math.max(take, skip);
+                }
 
-          profit = Math.max(take, skip);
-        }else{//when you buy you have to sell it first before buy another stock
-            int take = prices[idx] + helper(prices, idx+1, 1, dp);
-
-            int skip = helper(prices, idx+1, 0, dp);
-
-            profit = Math.max(take, skip);
+                dp[idx][buy] = profit;
+            }
         }
+        return dp[0][1];
 
-        return dp[idx][buy] = profit;
     }
 }
