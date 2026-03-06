@@ -1,29 +1,41 @@
 class Solution {
     public boolean isMatch(String s, String p) {
-        
-        Boolean[][] dp = new Boolean[s.length()+1][p.length()+1];
 
-        return helper(s, p, 0, 0, dp);
-    }
+        int n = s.length();
+        int m = p.length();
 
-    static boolean helper(String s, String p, int idx1, int idx2, Boolean[][] dp){
-       
-        if(idx2>=p.length()){
-            return idx1>=s.length();
-        } 
+        boolean[][] dp = new boolean[n+1][m+1];
 
-        if(dp[idx1][idx2] != null) return dp[idx1][idx2];
+        dp[n][m] = true;
 
-        boolean match = (idx1<s.length()) && (s.charAt(idx1) == p.charAt(idx2) || p.charAt(idx2) == '.');
-
-        if(idx2+1<p.length() && p.charAt(idx2+1)=='*'){
-           return dp[idx1][idx2] = (helper(s, p, idx1, idx2+2, dp) || (match && helper(s, p, idx1+1, idx2, dp)));
+        for(int j = m-1; j >= 0; j--){
+            if(j+1 < m && p.charAt(j+1) == '*'){
+                dp[n][j] = dp[n][j+2];
+            }
         }
 
-        if(match){
-            return dp[idx1][idx2] = helper(s, p, idx1+1, idx2+1, dp);
+        for(int i = n-1; i >= 0; i--){
+
+            for(int j = m-1; j >= 0; j--){
+
+                boolean match =
+                        s.charAt(i) == p.charAt(j) ||
+                        p.charAt(j) == '.';
+
+                if(j+1 < m && p.charAt(j+1) == '*'){
+
+                    dp[i][j] =
+                        dp[i][j+2] ||
+                        (match && dp[i+1][j]);
+
+                }
+                else if(match){
+
+                    dp[i][j] = dp[i+1][j+1];
+                }
+            }
         }
 
-        return dp[idx1][idx2] = false;
+        return dp[0][0];
     }
 }
