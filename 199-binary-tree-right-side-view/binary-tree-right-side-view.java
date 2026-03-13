@@ -31,7 +31,7 @@ class Solution {
         if(root == null) return list;
 
         Queue<Pair> q = new LinkedList<>();
-        TreeMap<Integer,Integer> map = new TreeMap<>();
+        Map<Integer,Integer> map = new HashMap<>();
 
         q.offer(new Pair(root,0));
 
