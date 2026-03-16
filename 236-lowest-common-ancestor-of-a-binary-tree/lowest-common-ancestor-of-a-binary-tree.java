@@ -9,12 +9,11 @@
  */
 class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        TreeNode LCS = dfs(root, p, q);
-
-        return LCS;
+        TreeNode lcs = helper(root, p, q);
+        return lcs; 
     }
 
-    static TreeNode dfs(TreeNode root, TreeNode p, TreeNode q){
+    static TreeNode helper(TreeNode root, TreeNode p, TreeNode q){
         if(root == null){
             return null;
         }
@@ -23,15 +22,13 @@ class Solution {
             return root;
         }
 
-        TreeNode left = dfs(root.left, p, q);
-        TreeNode right = dfs(root.right, p, q);
+        TreeNode left = helper(root.left, p, q);
+        TreeNode right = helper(root.right, p, q);
 
         if(left != null && right != null){
             return root;
         }
 
-        return left != null ? left: right;
-
-
+        return left != null ? left : right;
     }
 }
