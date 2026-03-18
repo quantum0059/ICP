@@ -15,22 +15,25 @@
  */
 class Solution {
     public TreeNode constructMaximumBinaryTree(int[] nums) {
-        Stack<TreeNode> st = new Stack<>();
+        return helper(nums, 0, nums.length-1);
+    }
 
-        for (int num : nums) {
-            TreeNode curr = new TreeNode(num);
-
-            while (!st.isEmpty() && st.peek().val < num) {
-                curr.left = st.pop();
-            }
-
-            if (!st.isEmpty()) {
-                st.peek().right = curr;
-            }
-
-            st.push(curr);
+    static TreeNode helper(int[] nums, int start, int end){
+        if(start>end){
+            return null;
         }
 
-        return st.firstElement();
+        int maxIdx = start;
+        for(int i=start;i<=end;i++){
+            if(nums[i]>nums[maxIdx]){
+                maxIdx = i;
+            }
+        }
+        TreeNode root = new TreeNode(nums[maxIdx]);
+
+        root.left = helper(nums, start, maxIdx-1);
+        root.right = helper(nums, maxIdx+1, end);
+
+        return root;
     }
 }
