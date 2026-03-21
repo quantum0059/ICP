@@ -14,29 +14,19 @@
  * }
  */
 class Solution {
-    public int minDiffInBST(TreeNode root) {
-       List<Integer> list = new ArrayList<>();
-       helper(root, list);
-
-       int min = Integer.MAX_VALUE;
-       if(list.size() == 1) return list.get(0);
-       if(list.size() == 2) return list.get(1)-list.get(0);
-       for(int i=1;i<list.size()-1;i++){
-          int prev = list.get(i)-list.get(i-1);
-          int next = list.get(i+1)-list.get(i);
-
-          int m = Math.min(prev, next);
-          min = Math.min(min, m);
-       }
-       return min;
+    public void helper(TreeNode root,int[] prev,int[] min){
+        if(root==null) return;
+        helper(root.left,prev,min);
+        if(prev[0]!=(int)(1e9)) min[0] = Math.min(min[0],root.val-prev[0]);
+        prev[0]=root.val;
+        helper(root.right,prev,min);
     }
-    static void helper(TreeNode root, List<Integer> list){
-        if(root == null){
-            return;
-        }
-
-        helper(root.left, list);
-        list.add(root.val);
-        helper(root.right, list);
+    public int minDiffInBST(TreeNode root) {
+        int[] prev = new int[1];
+        prev[0]= (int)(1e9);
+        int[] min = new int[1];
+        min[0] = (int)(1e9);
+        helper(root,prev,min);
+        return min[0];
     }
 }
