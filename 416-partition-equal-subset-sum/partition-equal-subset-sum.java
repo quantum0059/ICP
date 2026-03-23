@@ -1,39 +1,30 @@
 class Solution {
-    Boolean[][] memo;
-
     public boolean canPartition(int[] nums) {
-        int totalSum = 0;
-        for (int num : nums) {
-            totalSum += num;
-        }
+        int n = nums.length;
+        int sum = (Arrays.stream(nums).sum());
 
-        if (totalSum % 2 != 0) {
-            return false;
-        }
+        Boolean[][] dp = new Boolean[n][(sum/2)+1];
 
-        int target = totalSum / 2;
-        memo = new Boolean[nums.length][target + 1];
+        if(sum%2 != 0) return false;
 
-        return canFindSubsetSum(nums, 0, target);
+
+        return helper(nums, n-1, sum/2, dp);
+
+
     }
-
-    private boolean canFindSubsetSum(int[] nums, int idx, int remainingTarget) {
-        // Base cases
-        if (remainingTarget == 0) { 
-            return true;
-        }
-        if (idx == nums.length || remainingTarget < 0) {
+    static boolean helper(int[] nums, int idx, int sum, Boolean[][] dp){
+        if(sum == 0) return true;
+        if(idx<0){
             return false;
         }
-
-        if (memo[idx][remainingTarget] != null) {
-            return memo[idx][remainingTarget];
+        if(dp[idx][sum] != null) return dp[idx][sum];
+        boolean take = false;
+        if(sum>=nums[idx]){
+            take = helper(nums, idx-1, sum-nums[idx], dp);
         }
+        boolean notTake = helper(nums, idx-1, sum, dp);
+        
 
-        boolean include = canFindSubsetSum(nums, idx + 1, remainingTarget - nums[idx]);
-
-        boolean exclude = canFindSubsetSum(nums, idx + 1, remainingTarget);
-
-        return memo[idx][remainingTarget] = include || exclude;
+        return dp[idx][sum] = (notTake || take);
     }
 }
