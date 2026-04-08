@@ -3,8 +3,18 @@ class Solution {
         int n = s.length();
         int[] dp = new int[n+1];
 
-        Arrays.fill(dp, -1);
-        return helper(0, n, s, dp)-1;
+        for(int i=n-1;i>=0;i--){
+            int minCuts = Integer.MAX_VALUE;
+
+            for(int k=i;k<n;k++){
+                if(isPalindrome(i, k, s)){
+                    int cuts = 1+dp[k+1];
+                    minCuts = Math.min(minCuts, cuts);
+                }
+            }
+            dp[i] = minCuts;
+        }
+        return dp[0]-1;
 
     }
     static int helper(int i, int n, String s, int[] dp){
