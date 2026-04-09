@@ -2,22 +2,18 @@ class Solution {
     public int maximalRectangle(char[][] matrix) {
         int n= matrix.length;
         int m = matrix[0].length;
-        int[][] height = new int[n][m];
-
-        for(int i=0;i<n;i++){
-          for(int j=0;j<m;j++){
-            if(matrix[i][j] == '1'){
-                if(i>0){
-                    height[i][j] = 1+height[i-1][j];
-                }else{
-                    height[i][j] = 1;
-                }
-            }
-          }
-        }
+        int[] height = new int[m];
+        
         int maxRectangle = 0;
-        for(int[] arr: height){
-           maxRectangle = Math.max(maxRectangle, maxArea(arr));
+        for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(matrix[i][j] == '1'){
+                height[j] += 1;
+            } else { 
+                height[j] = 0;
+            }
+        }
+        maxRectangle = Math.max(maxRectangle, maxArea(height));
         }
 
         return maxRectangle;
