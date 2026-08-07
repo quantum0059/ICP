@@ -1,22 +1,14 @@
 class Solution {
-    int dp[];
     int M = 1000000007;
-    int helper(int n){
-        if(n==1 || n==2){
-            return n;
-        }
-
-        if(n==3) return 5;
-        if(dp[n] != -1) return dp[n];
-
-        return dp[n] = (int)(((2L * helper(n - 1)) % M
-                            + helper(n - 3)) % M);
-
-    }
     public int numTilings(int n) {
-        dp = new int[1001];
+         int []dp = new int[1001];
         Arrays.fill(dp, -1);
-
-        return helper(n);
+        dp[1]=1;
+        dp[2]=2;
+        dp[3]=5;
+        for(int i=4;i<n+1;i++){
+            dp[i] = (int)(((2L*dp[i-1])%M+dp[i-3])%M);
+        }
+        return  dp[n];
     }
 }
