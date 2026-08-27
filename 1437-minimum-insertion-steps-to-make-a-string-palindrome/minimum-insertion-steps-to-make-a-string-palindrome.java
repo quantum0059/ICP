@@ -1,28 +1,26 @@
 class Solution {
+    int[][] dp;
     public int minInsertions(String s) {
-        int n = s.length();
+      String rev = new StringBuilder(s).reverse().toString();
+      dp = new int[s.length()][s.length()];
+      for(int[] arr: dp){
+        Arrays.fill(arr, Integer.MAX_VALUE);
+      }
+      return helper(s, 0, s.length()-1);  
+    }
 
-        String s2 = new StringBuilder(s).reverse().toString();
-        int[][] dp = new int[n+1][n+1];
+     int helper(String s, int i, int j) {
 
-        for(int i=1;i<=n;i++){
-            for(int j=1;j<=n;j++){
-                int take = 0;
-                int skip1=0;
-                int skip2=0;
+        if(i >= j)
+            return 0;
+        
+        if(dp[i][j] != Integer.MAX_VALUE) return dp[i][j];
+        if(s.charAt(i) == s.charAt(j))
+            return dp[i][j]=helper(s, i + 1, j - 1);
 
-                if(s.charAt(i-1) == s2.charAt(j-1)){
-                    take = 1+dp[i-1][j-1];
-                }
-                else{
-                    skip1 = dp[i-1][j];
-                    skip2 = dp[i][j-1];
-                }
-
-                dp[i][j] = take+Math.max(skip1, skip2);
-            }
-        }
-
-        return n-dp[n][n];
+        return dp[i][j] = 1 + Math.min(
+            helper(s, i + 1, j),
+            helper(s, i, j - 1)
+        );
     }
 }
