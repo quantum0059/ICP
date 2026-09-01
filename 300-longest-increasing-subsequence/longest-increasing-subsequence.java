@@ -5,6 +5,7 @@ class Solution {
         int[] dp = new int[n];
         int[] cached = new int[n];
         int lastIdx = 0;
+          Arrays.fill(cached, -1);
 
         int max = 1;
         Arrays.fill(dp, 1);
@@ -21,7 +22,14 @@ class Solution {
                 lastIdx = i;
             }
         }
-        return  max;
+        List<Integer> list = new ArrayList<>();
+        while (lastIdx != -1) {
+            list.add(0, nums[lastIdx]);
+            lastIdx = cached[lastIdx];
+        }
+        System.out.print(list.toString());
+
+        return max;
     }
 
 }
