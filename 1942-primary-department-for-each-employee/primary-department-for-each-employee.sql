@@ -1,10 +1,16 @@
 # Write your MySQL query statement below
+WITH rankTable AS (
+    SELECT 
+    employee_id,
+    department_id,
+    primary_flag,
+    COUNT(*) OVER(PARTITION BY employee_id) as freq
+    from Employee
+
+)
 SELECT
-e1.employee_id,
-e1.department_id
-from Employee e1
-WHERE 1=(
-    SELECT COUNT(*)
-    FROM Employee e2
-    WHERE e1.employee_id = e2.employee_id
-) OR e1.primary_flag='Y';
+employee_id,
+department_id
+from rankTable
+WHERE (freq = 1) 
+      OR primary_flag='Y';
