@@ -1,50 +1,23 @@
 class Solution {
-    static int[][] dp;
-
     public int numDistinct(String s, String t) {
-        dp = new int[s.length() + 1][t.length() + 1];
-        for (int i = 0; i <= s.length(); i++) {
-            Arrays.fill(dp[i], -1);
+        int n = s.length();
+        int m = t.length();
+
+        int[][] dp = new int[n+1][m+1];
+        int[] count = new int[n];
+        for(int i=0;i<=n;i++){
+          dp[i][0] = 1;
         }
-
-        StringBuilder sb = new StringBuilder();
-        return helper(s, t, 0, sb);
-    }
-
-    static int helper(String s, String t, int idx, StringBuilder sb) {
-
-        if (sb.length() > 0) {
-            int last = sb.length() - 1;
-            if (sb.charAt(last) != t.charAt(last)) {
-                return 0;
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=m;j++){
+               if(s.charAt(i-1) ==t.charAt(j-1)){
+                dp[i][j] = dp[i-1][j-1]+dp[i-1][j];
+               }else{
+                dp[i][j] = dp[i-1][j];
+               }
             }
         }
 
-        
-        if (dp[idx][sb.length()] != -1) {
-            return dp[idx][sb.length()];
-        }
-
-        
-        if (idx == s.length()) {
-            return dp[idx][sb.length()] =
-                    (sb.length() == t.length()) ? 1 : 0;
-        }
-
-        if (sb.length() == t.length()) {
-            return dp[idx][sb.length()] = 1;
-        }
-
-        int count = 0;
-
-       
-        sb.append(s.charAt(idx));
-        count += helper(s, t, idx + 1, sb);
-        sb.deleteCharAt(sb.length() - 1);
-
-        
-        count += helper(s, t, idx + 1, sb);
-
-        return dp[idx][sb.length()] = count;
+        return dp[n][m];
     }
 }
