@@ -3,29 +3,18 @@ class Solution {
         int n = text1.length();
         int m = text2.length();
 
-        int[][] dp = new int[n][m];
-
-        for(int[] arr: dp){
-            Arrays.fill(arr, -1);
-        }
-
-        return helper(dp, text1, text2, n, m, 0, 0);
-    }
-
-    int helper(int[][] dp, String text1, String text2, int n, int m, int idx1, int idx2){
-        if(idx1>=n || idx2>=m){
-            return 0;
-        }
-        if(dp[idx1][idx2] != -1) return dp[idx1][idx2];
-        int take=0, skip1=0, skip2 = 0;
+        int[][] dp = new int[n+1][m+1];
         
-        if(text1.charAt(idx1) == text2.charAt(idx2)){
-           take = 1+helper(dp, text1, text2, n, m, idx1+1, idx2+1);
-        }else{
-           skip1 = helper(dp, text1, text2, n, m, idx1+1, idx2);
-           skip2 = helper(dp, text1, text2, n, m, idx1, idx2+1);
+        for(int i=n-1;i>=0;i--){
+            for(int j=m-1;j>=0;j--){
+                if(text1.charAt(i) == text2.charAt(j)){
+                    dp[i][j] = 1+dp[i+1][j+1];
+                }else{
+                    dp[i][j] = Math.max(dp[i+1][j], dp[i][j+1]);
+                }
+            }
         }
 
-        return dp[idx1][idx2] = Math.max(take, Math.max(skip1, skip2));
+        return dp[0][0];
     }
 }
