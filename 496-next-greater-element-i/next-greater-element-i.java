@@ -7,31 +7,22 @@ class Solution {
         if(n2 == 1 && n1 == 1){
             return new int[]{-1};
         }
-
-        int[] arr = new int[n2];
         Stack<Integer> st = new Stack<>();
-        int[] arr1 = new int[n1];
+        HashMap<Integer, Integer> map = new HashMap<>();
 
         for(int i=n2-1;i>=0;i--){
             while(!st.isEmpty() && st.peek()<=nums2[i]){
                 st.pop();
             }
 
-            if(st.isEmpty()){
-                arr[i] = -1;
-            }else{
-                arr[i] = st.peek();
-            }
+            map.put(nums2[i], st.isEmpty() ? -1: st.peek());
 
             st.push(nums2[i]);
         }
  
+        int[] arr1 = new int[n1];
         for(int i=0;i<n1;i++){
-            for(int j=0;j<n2;j++){
-                 if(nums1[i] == nums2[j]){
-                    arr1[i] = arr[j];
-                 }
-            }
+            arr1[i] = map.get(nums1[i]);
         }
 
         return arr1;
