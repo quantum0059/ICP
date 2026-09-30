@@ -1,56 +1,44 @@
 class Solution {
-    static class DisJointSet{
-        int[] parent, size;
-        DisJointSet(int n){
-            parent = new int[n];
-            size = new int[n];
-            for(int i=0;i<n;i++){
-                parent[i] = i;
-                size[i] = 1;
-            }
+    ArrayList<ArrayList<Integer>> makeAdjList(int[][] arr){
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        int n = arr.length;
+        int m = arr[0].length;
+        
+        for(int i=0;i<n;i++){
+            list.add(new ArrayList<>());
         }
-
-        int findParent(int n){
-            if(parent[n] != n){
-                parent[n] = findParent(parent[n]);
-            }
-
-            return parent[n];
-        }
-
-        void unionBySize(int u, int v){
-            int ul = findParent(u);
-            int vl = findParent(v);
-
-            if(ul == vl) return;
-            if(size[ul]< size[vl]){
-                parent[ul] = vl;
-                size[vl]+=size[ul];
-            }else{
-                parent[vl] = ul;
-                size[ul]+=size[vl];
-            }
-        }
-    }
-    public int findCircleNum(int[][] isConnected) {
-        int n = isConnected.length;
-        int m = isConnected[0].length;
-
-        DisJointSet ds = new DisJointSet(n);
-
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
-                if(i!=j && isConnected[i][j] == 1){
-                    ds.unionBySize(i, j);
+                if(i!=j && arr[i][j] == 1){
+                     list.get(i).add(j);
                 }
             }
         }
+        return list;
+    }
+    public int findCircleNum(int[][] isConnected) {
+        ArrayList<ArrayList<Integer>> list = makeAdjList(isConnected);
 
-        int countProv = 0;
-        for(int i=0;i<n;i++){
-            if(ds.findParent(i) == i) countProv++;
+        boolean[] vis = new boolean[isConnected.length];
+        
+        int count = 0;
+        for(int i=0;i<isConnected.length;i++){
+            if(!vis[i]){
+               count++;
+               DFS(list, vis, i);
+            }
         }
 
-        return countProv;
+        return count;
+
+    }
+    void DFS(ArrayList<ArrayList<Integer>> list, boolean[] vis, int idx){
+          vis[idx] = true;
+
+          for(int i: list.get(idx)){
+            if(!vis[i]){
+                DFS(list, vis, i);
+            }
+          }
     }
 }
