@@ -1,27 +1,31 @@
 class Solution {
     public int totalFruit(int[] fruits) {
-        HashMap<Integer, Integer> map = new HashMap<>();
+        int lastFruit = -1;
+        int secondLastFruit = -1;
 
-        int st = 0;
-        int NumberOfFruits = 0;
+        int lastFruitCount = 0;
+        int curr = 0;
+        int ans = 0;
 
-        for(int i=0;i<fruits.length;i++){
-           int fruit = fruits[i];
+        for (int fruit : fruits) {
 
-           while(st<fruits.length && map.size()==2 && !map.containsKey(fruit)){
-             int ele = fruits[st];
-             map.put(ele, map.get(ele)-1);
-             if(map.get(ele) <=0 ){
-                map.remove(ele);
-             }
-             st++;
-           }
+            if (fruit == lastFruit || fruit == secondLastFruit) {
+                curr++;
+            } else {
+                curr = lastFruitCount + 1;
+            }
 
-           map.put(fruit, map.getOrDefault(fruit, 0)+1);
-           NumberOfFruits = Math.max(NumberOfFruits, i - st + 1);
+            if (fruit == lastFruit) {
+                lastFruitCount++;
+            } else {
+                lastFruitCount = 1;
+                secondLastFruit = lastFruit;
+                lastFruit = fruit;
+            }
+
+            ans = Math.max(ans, curr);
         }
 
-
-        return NumberOfFruits;
+        return ans;
     }
 }
