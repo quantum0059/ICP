@@ -2,37 +2,33 @@ class Solution {
 
     public long subArrayRanges(int[] nums) {
         int n = nums.length;
-        long answer = 0;
-        Stack<Integer> stack = new Stack<>();
+        Stack<int[]> st = new Stack<>();
+        long[] res = new long[nums.length];
 
         // Find the sum of all the minimum.
-        for (int right = 0; right <= n; ++right) {
-            while (
-                !stack.isEmpty() &&
-                (right == n || nums[stack.peek()] >= nums[right])
-            ) {
-                int mid = stack.peek();
-                stack.pop();
-                int left = stack.isEmpty() ? -1 : stack.peek();
-                answer -= (long) nums[mid] * (right - mid) * (mid - left);
+        long minSum = 0;
+        for (int i = 0; i < n; i++) {
+            while(!st.isEmpty() && st.peek()[0]>=nums[i]){
+                st.pop();
             }
-            stack.add(right);
+            int j = st.isEmpty()?-1:st.peek()[1];
+            res[i] = (st.isEmpty()?(long)nums[i]*(i+1):res[j]+ (long)nums[i]*(i-j));
+            minSum+=res[i];
+            st.push(new int[]{nums[i], i});
         }
 
         // Find the sum of all the maximum.
-        stack.clear();
-        for (int right = 0; right <= n; ++right) {
-            while (
-                !stack.isEmpty() &&
-                (right == n || nums[stack.peek()] <= nums[right])
-            ) {
-                int mid = stack.peek();
-                stack.pop();
-                int left = stack.isEmpty() ? -1 : stack.peek();
-                answer += (long) nums[mid] * (right - mid) * (mid - left);
+        st.clear();
+        long maxSum = 0;
+        for (int i = 0; i < n; i++) {
+            while(!st.isEmpty() && st.peek()[0]<=nums[i]){
+                st.pop();
             }
-            stack.add(right);
+            int j = st.isEmpty()?-1:st.peek()[1];
+            res[i] = (st.isEmpty()?(long)nums[i]*(i+1):res[j]+ (long)nums[i]*(i-j));
+            maxSum+=res[i];
+            st.push(new int[]{nums[i], i});
         }
-        return answer;
+        return maxSum-minSum;
     }
 }
